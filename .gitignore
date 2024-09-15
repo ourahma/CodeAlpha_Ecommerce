@@ -1,0 +1,20 @@
+# Python
+*.pyc
+__pycache__/
+
+# Virtual Environments
+env/
+
+# Django
+db.sqlite3
+media/
+
+# VS Code
+.vscode/
+
+# MacOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ 
