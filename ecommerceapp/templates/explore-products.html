@@ -1,0 +1,65 @@
+{% load static %} {% block content %} {% for category in categories %}
+<section class="section" id="men">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-6">
+        <div class="section-heading">
+          <h2>{{ category.name }}</h2>
+          <span>{{ category.description }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Row for Products -->
+  <div class="container">
+    <div class="row">
+      {% for product in products %} 
+      {% if product.category.name == category.name%}
+
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="thumb-wrapper mb-4">
+          <div class="img-box">
+            <img
+              src="{{ product.image.url }}"
+              class="img-responsive"
+              alt="{{ product.name }}"
+            />
+          </div>
+          <div class="thumb-content">
+            <h4>{{ product.name }}</h4>
+            <p class="item-price">
+              {% if product.is_sale %}
+              <strike>{{ product.price }} {{product.currency }}</strike>
+              <span>{{ product.sale_price}} {{product.currency }}</span>
+            </p>
+            {% else %}
+            <span>{{ product.price}} {{product.currency }}</span>
+            {% endif %}
+
+            <div class="star-rating"></div>
+            <form class="d-flex justify-content-center align-items-end">
+              <!-- Add to Cart Icon -->
+              <a href="{#}" class="btn btn-outline-dark me-2">
+                <input
+                  type="hidden"
+                  value="{{ product.id }}"
+                  name="product_id"
+                />
+                <i class="bi bi-cart-fill"></i>
+              </a>
+
+              <!-- View Details Icon -->
+              <a href="{#}" class="btn btn-outline-dark">
+                <i class="bi bi-eye"></i>
+              </a>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      {% endif %} {% endfor %}
+    </div>
+  </div>
+</section>
+{% endfor %} {% endblock content %}

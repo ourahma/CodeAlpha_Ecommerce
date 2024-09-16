@@ -4,11 +4,11 @@ from .models import *
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'price', 'stock', 'created_at', 'updated_at')
+    list_display = ('name', 'price', 'created_at', 'updated_at')
 
 @admin.register(ClothingProduct)
 class ClothingProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'price', 'stock', 'created_at', 'updated_at')
+    list_display = ('name', 'price', 'created_at', 'updated_at')
     filter_horizontal = ('sizes',)  
     
     
@@ -23,6 +23,18 @@ class CategoryAdmin(admin.ModelAdmin):
     
     
 
-admin.register(Customer)
-admin.register(Order)
-admin.register(OrderItem)
+@admin.register(Customer)
+class CustomerAdmin(admin.ModelAdmin):
+    list_display = ('user', 'phone_number', 'address')
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('customer', 'order_date', 'status', 'total_amount')
+
+@admin.register(OrderItem)
+class OrderItemAdmin(admin.ModelAdmin):
+    list_display = ('order', 'product', 'quantity', 'price')
+
+@admin.register(ProductStock)
+class ProductStockAdmin(admin.ModelAdmin):
+    list_display = ('product', 'size', 'stock')
