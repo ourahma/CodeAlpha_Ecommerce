@@ -43,7 +43,7 @@ class ClothingProduct(Product):
     
 class ProductStock(models.Model):
     product = models.ForeignKey(Product, related_name='stock', on_delete=models.CASCADE)
-    size = models.ForeignKey(Size, related_name='stock', null=True, blank=True, on_delete=models.SET_NULL)  # Optional size
+    size = models.ForeignKey(Size, related_name='stock', null=True, blank=True, on_delete=models.SET_NULL)  
     stock = models.PositiveIntegerField()
 
     def __str__(self):

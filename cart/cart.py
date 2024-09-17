@@ -13,15 +13,23 @@ class Cart():
         
         #make sure cart is available on all pages of site
         self.cart=cart
-    def add(self,product,quantity):
-        product_id=str(product.id)
-        product_qty=str(quantity)
-        if product_id in self.cart:
-            pass
+    def add(self, product, quantity=1, size=None):
+        product_id = str(product.id)
+        
+        # Prepare cart entry for the product
+        if product_id not in self.cart:
+            self.cart[product_id] = {'quantity': 0, 'size': None}
         else:
-            #self.cart[product_id]={'price':str(product.price)}
-            self.cart[product_id]=int(product_qty)
-        self.session.modified=True
+            return False
+        # Update the quantity and size
+        self.cart[product_id]['quantity'] += quantity
+        if size:
+            self.cart[product_id]['size'] = size # Store the size ID
+
+        # Mark the session as modified to make sure it's saved
+        print(self.cart)
+        self.session.modified = True
+        return True
         
     def __len__(self):
         return len(self.cart)
@@ -38,19 +46,25 @@ class Cart():
         quantites=self.cart
         return quantites
     
-    def update(self,product_id,quantity):
-        product_id=str(product_id)
-        product_qty=int(quantity)
-        ##get the cart
-        
-        ourcart=self.cart
-        #uodate dict
-        ourcart[product_id]=product_qty
-        
+    def update(self, product_id, quantity, size_id=None):
+        product_id = str(product_id)
+
+        # Check if the product is in the cart
+        if product_id in self.cart:
+            # Convert size_id to Size object if size_id is provided
+            size = None
+            if size_id:
+                try:
+                    size = Size.objects.get(id=size_id)
+                except Size.DoesNotExist:
+                    size = None
+            
+            # Update the quantity and size
+            self.cart[product_id]['quantity'] = quantity
+            if size:
+                self.cart[product_id]['size'] = size.id
+     
         self.session.modified = True
-        
-        thing=self.cart
-        return thing
     
     def delete(self,product):
         product_id= str(product)
@@ -61,20 +75,18 @@ class Cart():
         self.session.modified=True
     
     def cart_total(self):
-        #get product ids
-        product_ids=self.cart.keys()
-        #lookip the keyys in the db
-        products=Product.objects.filter(id__in=product_ids)
-        #get quantities
-        quantites=self.cart
-        
-        total=0
-        for key,value in quantites.items():
-            key=int(key)
-            for product in products:
-                if product.id==key:
-                    if product.is_sale:
-                        total=total+(product.sale_price*value)
-                    else:
-                        total=total+(product.price*value)
+        # Extract product IDs from the cart
+        product_ids = self.cart.keys()
+
+        # Fetch the products from the database
+        products = Product.objects.filter(id__in=product_ids)
+
+        total = 0
+        for product_id, item in self.cart.items():
+            product = products.get(id=product_id)
+            quantity = item['quantity']
+            if product.is_sale:
+                total += product.sale_price * quantity
+            else:
+                total += product.price * quantity
         return total

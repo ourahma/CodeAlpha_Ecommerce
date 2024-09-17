@@ -7,5 +7,5 @@ from . import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include('ecommerceapp.urls')),
-    #path('cart',include('cart.urls')),
+    path('cart',include('cart.urls')),
 ]+ static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

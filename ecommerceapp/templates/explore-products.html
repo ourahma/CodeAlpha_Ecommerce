@@ -1,4 +1,4 @@
-{% load static %} {% block content %} {% for category in categories %}
+{% load static %} {% for category in categories %}
 <section class="section" id="men">
   <div class="container">
     <div class="row g-4">
@@ -15,7 +15,7 @@
   <div class="container">
     <div class="row">
       {% for product in products %} 
-      {% if product.category.name == category.name%}
+      {% if product.category.name == category.name %}
 
       <div class="col-lg-3 col-md-4 col-sm-6">
         <div class="thumb-wrapper mb-4">
@@ -32,34 +32,57 @@
               {% if product.is_sale %}
               <strike>{{ product.price }} {{product.currency }}</strike>
               <span>{{ product.sale_price}} {{product.currency }}</span>
+              {% else %}
+              <span>{{ product.price}} {{product.currency }}</span>
+              {% endif %}
             </p>
-            {% else %}
-            <span>{{ product.price}} {{product.currency }}</span>
-            {% endif %}
 
             <div class="star-rating"></div>
-            <form class="d-flex justify-content-center align-items-end">
-              <!-- Add to Cart Icon -->
-              <a href="{#}" class="btn btn-outline-dark me-2">
-                <input
-                  type="hidden"
-                  value="{{ product.id }}"
-                  name="product_id"
-                />
-                <i class="bi bi-cart-fill"></i>
-              </a>
-
-              <!-- View Details Icon -->
-              <a href="{#}" class="btn btn-outline-dark">
-                <i class="bi bi-eye"></i>
-              </a>
-            </form>
+            <form class="d-flex justify-content-center align-items-end" method="POST" action="{% url 'add' product.id %}">
+              {% csrf_token %}
+              
+              <!-- Row containing the select and buttons -->
+              <div class="row w-100">
+                  <!-- Size select (only if sizes exist for the product) -->
+                  {% if product.stock.all|length > 0 and product.stock.all.0.size %}
+                  <div class="col-12 mb-2">
+                      <div class="form-group">
+                          <label for="size-select-{{ product.id }}">Choose size:</label>
+                          <select name="size" id="size-select-{{ product.id }}" class="form-control">
+                              {% for stock in product.stock.all %}
+                                  {% if stock.size %}
+                                      <option value="{{ stock.size.id }}">{{ stock.size.name }} ({{ stock.stock }} available)</option>
+                                  {% endif %}
+                              {% endfor %}
+                          </select>
+                      </div>
+                  </div>
+                  {% endif %}
+                  
+                  <!-- Buttons: Add to Cart and View Details -->
+                  <div class="col-12">
+                      <div class="d-flex justify-content-between">
+                          <!-- Add to Cart Button -->
+                          <button type="submit" class="btn btn-outline-dark me-2">
+                              <input type="hidden" value="{{ product.id }}" name="product_id" />
+                              <i class="bi bi-cart-fill"></i>
+                          </button>
+                          
+                          <!-- View Details Button -->
+                          <a href="{% url 'view_product' product.id %}" class="btn btn-outline-dark">
+                              <i class="bi bi-eye"></i>
+                          </a>
+                      </div>
+                  </div>
+              </div>
+          </form>
           </div>
         </div>
       </div>
 
-      {% endif %} {% endfor %}
+      {% endif %} 
+      {% endfor %}
     </div>
   </div>
 </section>
-{% endfor %} {% endblock content %}
+{% endfor %}

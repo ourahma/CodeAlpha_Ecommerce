@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<br><br><br><br><br><br>
+<div class="row md-4 mx-5">
+
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="section-heading">
+                    <h2>{{ singlecategory.name }}</h2>
+                    <span>{{ singlecategory.description }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <br><br><br><br><br><br><br>
+
+    {% if products %}
+        {% for product in products %}
+        <div class="col-lg-3 col-md-4 col-sm-6">
+            <div class="thumb-wrapper mb-4">
+                <div class="img-box">
+                    <img src="{{ product.image.url }}" class="img-responsive" alt="{{ product.name }}" />
+                </div>
+                <div class="thumb-content">
+                    <h4>{{ product.name }}</h4>
+                    <p class="item-price">
+                        {% if product.is_sale %}
+                        <strike>{{ product.price }} {{ product.currency }}</strike>
+                        <span>{{ product.sale_price }} {{ product.currency }}</span>
+                        {% else %}
+                        <span>{{ product.price }} {{ product.currency }}</span>
+                        {% endif %}
+                    </p>
+
+                    <div class="star-rating"></div>
+                    
+                    <!-- Form starts -->
+                    <form class="d-flex justify-content-center align-items-end" method="POST" action="{% url 'add' product.id %}">
+                        {% csrf_token %}
+                        
+                        <!-- Row containing the select and buttons -->
+                        <div class="row w-100">
+                            <!-- Size select (only if sizes exist for the product) -->
+                            {% if product.stock.all|length > 0 and product.stock.all.0.size %}
+                            <div class="col-12 mb-2">
+                                <div class="form-group">
+                                    <label for="size-select-{{ product.id }}">Choose size:</label>
+                                    <select name="size" id="size-select-{{ product.id }}" class="form-control">
+                                        {% for stock in product.stock.all %}
+                                            {% if stock.size %}
+                                                <option value="{{ stock.size.id }}">{{ stock.size.name }} ({{ stock.stock }} available)</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            <!-- Buttons: Add to Cart and View Details -->
+                            <div class="col-12">
+                                <div class="d-flex justify-content-between">
+                                    <!-- Add to Cart Button -->
+                                    <button type="submit" class="btn btn-outline-dark me-2">
+                                        <input type="hidden" value="{{ product.id }}" name="product_id" />
+                                        <i class="bi bi-cart-fill"></i>
+                                    </button>
+                                    
+                                    <!-- View Details Button -->
+                                    <a href="{% url 'view_product' product.id %}" class="btn btn-outline-dark">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- Form ends -->
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+    <center>No products for this category</center>
+    {% endif %}
+</div>
+{% endblock content %}

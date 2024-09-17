@@ -1,0 +1,84 @@
+{% extends 'base.html' %} {% block content %}
+<br /><br /><br /><br /><br /><br />
+
+{% if cart_products %}
+
+<div class="container">
+  <div class="row">
+    {% for product in cart_products %}
+
+    <div class="col-lg-3 col-md-4 col-sm-6">
+      <div class="thumb-wrapper mb-4">
+        <div class="img-box">
+          <img
+            src="{{ product.image.url }}"
+            class="img-responsive"
+            alt="{{ product.name }}"
+          />
+        </div>
+        <div class="thumb-content">
+          <h4>{{ product.name }}</h4>
+          <p class="item-price">
+            {% if product.is_sale %}
+            <strike>{{ product.price }} {{product.currency }}</strike>
+            <span>{{ product.sale_price}} {{product.currency }}</span>
+            {% else %}
+            <span>{{ product.price}} {{product.currency }}</span>
+            {% endif %}
+          </p>
+
+          <div class="star-rating"></div>
+          <form class="d-flex justify-content-center align-items-end">
+            <!-- Add to Cart Icon -->
+            <a
+              href=""
+              data-index="{{product.id}}"
+              id="delete_product"
+              class="btn btn-outline-dark me-2"
+            >
+              <input type="hidden" value="{{ product.id }}" name="product_id" />
+              <i class="bi bi-trash-fill"></i>
+            </a>
+
+            <!-- View Details Icon -->
+            <a href="{% url 'view_product' product.id %}?modify=true" class="btn btn-outline-dark" data-index="{{product.id}}">
+              <i class="bi bi-pencil-fill"></i>
+            </a>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    {% endfor %}
+  </div>
+</div>
+<center><h3>Total: $ {{ totals }}</h3></center>
+{% else %}
+
+<center>You didn't select any Items</center>
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+{% endif %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).on("click", "#delete_product", function (e) {
+    e.preventDefault();
+    var productid = $(this).data("index");
+    console.log(productid);
+    $.ajax({
+      type: "POST",
+      url: "{% url 'cart_delete' %}",
+      data: {
+        product_id: $(this).data("index"),
+        csrfmiddlewaretoken: "{{ csrf_token }}",
+        action: "post",
+      },
+      success: function (json) {
+        location.reload();
+      },
+      error: function (xbr, errmsg, err) {
+        console.log(err);
+      },
+    });
+  });
+</script>
+{% endblock content %}
