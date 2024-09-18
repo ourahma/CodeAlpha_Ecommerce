@@ -1,4 +1,8 @@
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from django.contrib.auth.models import User
+
 
 ## size model
 
@@ -45,7 +49,16 @@ class ProductStock(models.Model):
     product = models.ForeignKey(Product, related_name='stock', on_delete=models.CASCADE)
     size = models.ForeignKey(Size, related_name='stock', null=True, blank=True, on_delete=models.SET_NULL)  
     stock = models.PositiveIntegerField()
-
+    
+    def increaseStock():
+        self.stock += 1
+        self.save()
+    def decreaseStock():
+        if self.stock > 0:
+            self.stock -= 1
+            self.save()
+    def is_in_stock(self):
+        return self.stock > 0
     def __str__(self):
         return f"{self.product.name} ({self.size}) - {self.stock} units available"
 
@@ -94,6 +107,28 @@ class Customer(models.Model):
     user = models.OneToOneField('auth.User', on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=20, blank=True, null=True)
     address = models.TextField(blank=True, null=True)
+    card_number = models.CharField(max_length=16, blank=True, null=True)
+    expiry_date = models.CharField(max_length=5, blank=True, null=True)  # Format: MM/YY
+    cvv = models.CharField(max_length=3, blank=True, null=True)
     
     def __str__(self):
         return self.user.username
+    
+def create_profile(sender,instance,created,**kwargs):
+    if created:
+        # user_profile=Profile(user=instance)
+        # user_profile.save()
+        Profile.objects.create(user=instance)
+#automate the profile thing
+post_save.connect(create_profile,sender=User)
+
+# Automatically create a Customer profile when a User is created
+@receiver(post_save, sender=User)
+def create_customer_profile(sender, instance, created, **kwargs):
+    if created:
+        Customer.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_customer_profile(sender, instance, **kwargs):
+    pass
+    #instance.customer.save()

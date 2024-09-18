@@ -51,7 +51,7 @@
                                     <select name="size" id="size-select-{{ product.id }}" class="form-control">
                                         {% for stock in product.stock.all %}
                                             {% if stock.size %}
-                                                <option value="{{ stock.size.id }}">{{ stock.size.name }} ({{ stock.stock }} available)</option>
+                                                <option value="{{ stock.size.id }}">{{ stock.size.name }}</option>
                                             {% endif %}
                                         {% endfor %}
                                     </select>
@@ -62,12 +62,19 @@
                             <!-- Buttons: Add to Cart and View Details -->
                             <div class="col-12">
                                 <div class="d-flex justify-content-between">
+                                    
+                                    {% if product.in_stock %}
+                                        
+                                    
+                                        
                                     <!-- Add to Cart Button -->
                                     <button type="submit" class="btn btn-outline-dark me-2">
                                         <input type="hidden" value="{{ product.id }}" name="product_id" />
                                         <i class="bi bi-cart-fill"></i>
                                     </button>
-                                    
+                                    {% else %}
+                                    Out of Stock
+                                    {% endif %}
                                     <!-- View Details Button -->
                                     <a href="{% url 'view_product' product.id %}" class="btn btn-outline-dark">
                                         <i class="bi bi-eye"></i>
@@ -81,6 +88,7 @@
             </div>
         </div>
         {% endfor %}
+        <br><br><br>
     {% else %}
     <center>No products for this category</center>
     {% endif %}

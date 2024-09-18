@@ -8,6 +8,7 @@
     {% for product in cart_products %}
 
     <div class="col-lg-3 col-md-4 col-sm-6">
+      
       <div class="thumb-wrapper mb-4">
         <div class="img-box">
           <img
@@ -53,6 +54,14 @@
   </div>
 </div>
 <center><h3>Total: $ {{ totals }}</h3></center>
+
+
+<div class="container mt-4 text-center">
+  <a href="{% url 'checkout' %}" class="btn btn-dark d-inline-flex align-items-center">
+    <i class="bi bi-cart-fill me-2"></i> Checkout
+  </a>
+</div>
+
 {% else %}
 
 <center>You didn't select any Items</center>

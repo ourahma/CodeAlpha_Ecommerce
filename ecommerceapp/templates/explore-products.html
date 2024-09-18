@@ -10,7 +10,7 @@
       </div>
     </div>
   </div>
-
+<br><br><br><br>
   <!-- Add Row for Products -->
   <div class="container">
     <div class="row">
@@ -47,11 +47,12 @@
                   {% if product.stock.all|length > 0 and product.stock.all.0.size %}
                   <div class="col-12 mb-2">
                       <div class="form-group">
+                        <br>
                           <label for="size-select-{{ product.id }}">Choose size:</label>
                           <select name="size" id="size-select-{{ product.id }}" class="form-control">
                               {% for stock in product.stock.all %}
                                   {% if stock.size %}
-                                      <option value="{{ stock.size.id }}">{{ stock.size.name }} ({{ stock.stock }} available)</option>
+                                      <option value="{{ stock.size.id }}">{{ stock.size.name }} </option>
                                   {% endif %}
                               {% endfor %}
                           </select>
@@ -63,11 +64,14 @@
                   <div class="col-12">
                       <div class="d-flex justify-content-between">
                           <!-- Add to Cart Button -->
+                          {% if product.in_stock %}
                           <button type="submit" class="btn btn-outline-dark me-2">
                               <input type="hidden" value="{{ product.id }}" name="product_id" />
                               <i class="bi bi-cart-fill"></i>
                           </button>
-                          
+                          {% else %}
+                          out of stock
+                          {% endif %}
                           <!-- View Details Button -->
                           <a href="{% url 'view_product' product.id %}" class="btn btn-outline-dark">
                               <i class="bi bi-eye"></i>
@@ -78,10 +82,13 @@
           </form>
           </div>
         </div>
+        <br><br><br>
       </div>
-
+      
       {% endif %} 
+      
       {% endfor %}
+      
     </div>
   </div>
 </section>

@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block content %}
+<br><br><br><br>
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+      <div class="text-center text-white">
+        <h1 class="display-4 fw-bolder">Checkout</h1>
+      </div>
+    </div>
+</header>
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Column for Credit Card Information -->
+        <div class="col-lg-6">
+            <h4 class="mb-4">Payment Information</h4>
+            <form method="post" action="{% url 'checkout' %}">
+                {% csrf_token %}
+                <div class="form-group mb-3">
+                    <label for="cardholder-name">Cardholder's Name</label>
+                    <input type="text" class="form-control" id="cardholder-name" placeholder="Enter cardholder's name" required>
+                </div>
+                
+                <div class="form-group mb-3">
+                    <label for="card-number">Card Number</label>
+                    <input type="text" class="form-control" id="card-number" placeholder="1234 5678 9012 3456" required>
+                </div>
+                
+                <div class="form-row mb-3">
+                    <div class="col">
+                        <label for="expiry-date">Expiry Date</label>
+                        <input type="text" class="form-control" id="expiry-date" placeholder="MM/YY" required>
+                    </div>
+                    <div class="col">
+                        <label for="cvv">CVV</label>
+                        <input type="text" class="form-control" id="cvv" placeholder="CVV" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-dark btn-lg w-100 mt-3">Confirm Order</button>
+            </form>
+        </div>
+
+        <!-- Column for Cart Content -->
+        <div class="col-lg-6">
+            <h4 class="mb-4">Order Summary</h4>
+            <ul class="list-group mb-4">
+                {% for item in cart_items %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ item.product.name }} (x{{ item.quantity }})
+                    <span>
+                        {% if item.product.is_sale %}
+                            ${{ item.product.sale_price }}
+                        {% else %}
+                            ${{ item.product.price }}
+                        {% endif %}
+                    </span>
+                </li>
+                
+                {% endfor %}
+            </ul>
+            <div class="d-flex justify-content-between">
+                <h5>Total Amount:</h5>
+                <h5>${{ total_amount }}</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
