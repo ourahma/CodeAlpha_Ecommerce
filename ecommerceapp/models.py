@@ -104,7 +104,7 @@ class Category(models.Model):
 
 ## Customer model
 class Customer(models.Model):
-    user = models.OneToOneField('auth.User', on_delete=models.CASCADE)
+    user=models.OneToOneField(User,on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=20, blank=True, null=True)
     address = models.TextField(blank=True, null=True)
     card_number = models.CharField(max_length=16, blank=True, null=True)
@@ -114,21 +114,8 @@ class Customer(models.Model):
     def __str__(self):
         return self.user.username
     
-def create_profile(sender,instance,created,**kwargs):
-    if created:
-        # user_profile=Profile(user=instance)
-        # user_profile.save()
-        Profile.objects.create(user=instance)
-#automate the profile thing
-post_save.connect(create_profile,sender=User)
-
-# Automatically create a Customer profile when a User is created
-@receiver(post_save, sender=User)
-def create_customer_profile(sender, instance, created, **kwargs):
+def create_customer(sender,instance,created,**kwargs):
     if created:
         Customer.objects.create(user=instance)
 
-@receiver(post_save, sender=User)
-def save_customer_profile(sender, instance, **kwargs):
-    pass
-    #instance.customer.save()
+post_save.connect(create_customer,sender=User)

@@ -85,7 +85,7 @@ def cart_update(request):
 def checkout(request):
     if not request.user.is_authenticated:
         messages.warning(request, 'Login first to validate your order')
-        return redirect('login')
+        return redirect('login_user')
     else:
         cart = Cart(request)
 

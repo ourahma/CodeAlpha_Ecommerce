@@ -4,6 +4,14 @@ from cart.cart import Cart
 from django.contrib.auth import *
 from django.contrib import messages
 from .forms import *
+# views to reset password
+from django.contrib.auth import views as auth_views
+from django.urls import reverse_lazy
+from django.contrib.auth.forms import *
+
+
+
+
 def dashboard(request):
     categories=Category.objects.all()
     products = Product.objects.all().prefetch_related('stock__size')
@@ -97,10 +105,10 @@ def login_user(request):
         if user is not None:
             login(request,user)
             messages.success(request,("You have been logged in "))
-            return redirect('validate')
+            return redirect('checkout')
         else:
             messages.ERROR(request,("There was an error, please try again "))
-            return redirect('login')
+            return redirect('login_user')
     else:
         return render(request,'login.html',{})
 
@@ -122,7 +130,7 @@ def register_user(request):
             user = authenticate(request, username=username, password=password)
             login(request, user)
             messages.success(request, "You have registered successfully")
-            return redirect('home')
+            return redirect('dashboard')
         else:
             # Afficher les erreurs de validation dans les messages d'erreur
             for field, errors in form.errors.items():
@@ -134,3 +142,57 @@ def register_user(request):
     
 def validate(request):
     return render(request,'validate.html',{})
+
+
+############################## RESERT PASSWORD BY EMAIL
+
+class PasswordResetView(auth_views.PasswordResetView):
+    template_name = 'forget_password_from_email.html'
+    success_url = reverse_lazy('password_reset_done')
+    form_class = PasswordResetForm
+
+    def form_valid(self, form):
+        email = form.cleaned_data['email']
+        
+        users = list(self.get_users(email))
+        
+        if not users:
+           
+            messages.error(self.request, "No user registered with this email!!")
+            return redirect("login_user")
+       
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        
+        print("form is unvalid")
+        return redirect("login_user")
+
+    def get_users(self, email):
+        UserModel = get_user_model()
+        active_users = UserModel._default_manager.filter(
+            email__iexact=email,
+            is_active=True,
+        )
+        return (u for u in active_users if u.has_usable_password())
+    
+
+
+def activate(request, uidb64, token):
+    User = get_user_model()
+    try:
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_verified = True
+        user.is_active = True
+        user.save()
+        messages.success(request, 'Vous avez activé votre compte. Vous pouvez maintenant vous connecter.')
+        return redirect('login_user')
+    else:
+        messages.error(request, 'Le lien d\'activation est invalide !')
+        return redirect('register')
+    

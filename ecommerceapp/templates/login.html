@@ -16,7 +16,7 @@
   <br /><br /><br />
   <div class="row">
     <div class="col-md-6 offset-md-3">
-      <form method="post" action="{% url 'login' %}">
+      <form method="post" action="{% url 'login_user' %}">
         {% csrf_token %}
         <div class="mb-3">
           <label for="exampleInputEmail1" class="form-label">Username</label>
@@ -40,6 +40,7 @@
         <button type="submit" class="btn btn-secondary">LOG IN</button>
       </form>
       <br>
+      <a href="{% url 'password_reset' %}">Forget Password ?</a><br>
       <a href="{% url 'register' %}"> You don't have an account ?</a>
     </div>
   </div>

@@ -123,6 +123,23 @@ MEDIA_ROOT=os.path.join(BASE_DIR,'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+LOGIN_URL = '/login_user/'
+LOGOUT_URL = '/logout/'
 
 STRIPE_PUBLIC_KEY = os.getenv('STRIPE_PUBLIC_KEY')
 STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
+
+mail=os.environ.get("MAIL")
+mail_pass=os.environ.get("MAIL_PASSWORD")
+
+## Mailing backend
+
+EMAIL_LOG_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'smtp.office365.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = mail
+EMAIL_HOST_PASSWORD = mail_pass
+DEFAULT_FROM_EMAIL = mail
+EMAIL_SUBJECT_PREFIX = "Réinitialisation de mot de passe"

@@ -13,6 +13,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css"
       rel="stylesheet"
     />
+    <link rel="icon" href="{% static 'images/logo-petit.png' %}" type="image/x-icon">
 
     <link
       href="https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&display=swap"
@@ -138,7 +139,7 @@
                   <a href="javascript:;"> {{ user.username }}</a>
                   <ul>
                     <li><a href="#">Edit your profile</a></li>
-                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                    <li><a href="{% url 'logout_user' %}">Logout</a></li>
                     
                   </ul>
                 </li>
