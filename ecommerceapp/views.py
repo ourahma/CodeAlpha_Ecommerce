@@ -78,24 +78,25 @@ def view_product(request, product_id):
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
     total_stock = sum(stock.stock for stock in product.stock.all())
-    is_in_stock = total_stock > 0 
-    quantites = cart.get_quants()
-    cart_items = quantites.get(str(product_id), {'quantity': 1, 'size': None})
-
+    is_in_stock = total_stock > 0
+    quantities = cart.get_quants()
+    cart_items = quantities.get(str(product_id), {'quantity': 1, 'size': None})
+    
+    sizes_in_stock = []
+    selected_size = None
+    
     if ClothingProduct.objects.filter(id=product_id).exists():
-        
         clothing_product = ClothingProduct.objects.get(id=product_id)
-        sizes = clothing_product.sizes.all()
-        if sizes:  # Ensure sizes is not empty
-           
-            selected_size = cart.get_quants().get(str(product_id), {'quantity': 1, 'size': None})['size']
-        else:
-            sizes = []
-            selected_size = None
-    else:
-        sizes = []
-        selected_size = None
-
+        
+        # Get all sizes available in stock
+        available_stocks = ProductStock.objects.filter(product=clothing_product, stock__gt=0)
+        sizes_in_stock = [stock.size for stock in available_stocks if stock.size]  # List of sizes with stock
+        
+        # Get the selected size from the cart
+        selected_size = cart.get_quants().get(str(product_id), {'quantity': 1, 'size': None})['size']
+        if selected_size:
+            selected_size = Size.objects.get(id=selected_size)  # Fetch the selected size object
+            
     product_quantity = cart_items['quantity']
     categories = Category.objects.all()
     products = Product.objects.all()
@@ -107,7 +108,7 @@ def view_product(request, product_id):
         'products': products,
         'totals': totals,
         'modify': modify_mode,
-        'sizes': sizes,
+        'sizes': sizes_in_stock,  # Pass sizes that are in stock
         'selected_size': selected_size,
         'product_quantity': product_quantity,
         'added': False,
@@ -118,6 +119,7 @@ def view_product(request, product_id):
         context['added'] = True
 
     return render(request, 'single-product.html', context)
+
 
 
 def single_category(request,category_id):
@@ -278,3 +280,75 @@ def verify(request):
     else:
         messages.error(request,"You must log in first")
         return redirect("login_user")
+    
+    
+def orders(request):
+    user = request.user
+    orders = Order.objects.filter(customer=user.customer).prefetch_related('items')
+    return render(request, 'user_orders.html', {'orders': orders})
+
+def profile(request):
+    user=request.user
+    updatepswdform=ChangePasswordForm(request.user,request.POST)
+    updateuserform=UpdateUserForm(user=request.user)
+    
+    
+    return render(request,'profile.html',{
+        'user':user,
+        'updatepswdform':updatepswdform,
+        'updateuserform':updateuserform,
+        })
+    
+    
+    
+    
+def update_password(request):
+    
+    if request.user.is_authenticated:
+        current_user=request.user
+        if request.method =='POST':
+            form=ChangePasswordForm(current_user,request.POST)
+            
+            # if the form valid
+            
+            if form.is_valid():
+                form.save()
+                messages.success(request,"Your password has been up to date ")
+                login(request,current_user)
+                return redirect('profile')
+            else:
+                for error in form.errors.items():
+                    messages.error(request,error)
+                    return redirect('profile')
+        else:
+            form=ChangePasswordForm(current_user)
+            return render(request,'profile.html',{
+                'form':form
+            })
+    else:
+        messages.error(request,"You must be logged in ")
+        return redirect('dashboard')
+    
+    
+def update_info(request):
+    if request.user.is_authenticated:
+        try:
+            current_user = Customer.objects.get(user=request.user)
+            form = UserInfoForm(request.POST or None, instance=current_user)
+        except Customer.DoesNotExist:
+            # Handle the case where Profile does not exist for the user
+            messages.error(request, "Profile does not exist. Please create your profile.")
+            return redirect('profile')  # Redirect to a view to create the profile
+        
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your info has been updated")
+            return redirect('profile')
+        else:
+            messages.error(request,form.error)
+            return redirect("profile")
+        
+        return render(request, "profile.html", {'form': form})
+    else:
+        messages.error(request, "You must be logged in")
+        return redirect('dashboard')

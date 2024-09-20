@@ -129,10 +129,16 @@
                 <li class="submenu">
                   <a href="javascript:;"> {{ user.username }}</a>
                   <ul>
-                    <li><a href="#">Edit your profile</a></li>
+                    <li><a href="{% url 'profile' %}">Edit your profile</a></li>
+                    <li><a href="{% url 'orders' %}">You orders</a></li>
                     <li><a href="{% url 'logout_user' %}">Logout</a></li>
                     
+                    
                   </ul>
+                </li>
+                {% else %}
+                <li>
+                  <a href="{% url 'login_user' %}" class="btn btn-dark text-white align-content-center">LOG IN</a>
                 </li>
                 {% endif %}
                   

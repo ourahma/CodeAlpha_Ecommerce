@@ -29,10 +29,23 @@ urlpatterns = [
     
     
     ## order success
-    path('order_success',views.order_success,name="order_success"),
+    path('order_success/',views.order_success,name="order_success"),
     
     ## register user address and verfying it 
-    path('verify',views.verify,name="verify")
-   
+    path('verify/',views.verify,name="verify"),
+    
+    
+    ## display list of user orders
+    
+    path("orders/",views.orders,name="orders"),
+    
+    ### display the profile page
+    
+    path('profile/',views.profile, name="profile"),
+    
+    ## updating password
+    
+    path('update_password/',views.update_password,name='update_password'),
+    path('update_info/',views.update_info,name='update_info'),
 
 ]

@@ -18,8 +18,8 @@ def cart_add(request, product_id):
     cart = Cart(request)
 
     # Get the product and quantity from the request
-    size_id = request.POST.get('size_id', None)
-    print(size_id)
+    size_id = request.POST.get('size', None)
+    print("size id ",size_id)
     product = get_object_or_404(Product, id=product_id)
     product_qty = product_qty = int(request.POST.get('product_qty', 1))
 
@@ -179,7 +179,7 @@ def create_payment(request):
                 customer=user.customer,
                 total_amount=total_amount
             )
-        cart_items = cart.get_quants
+        cart_items = cart.get_quants()
             # Process each item in the cart
         for product_id, item in cart_items.items():
             product = Product.objects.get(id=product_id)
@@ -190,20 +190,36 @@ def create_payment(request):
             if size:
                 stock = ProductStock.objects.filter(product=product, size=size).first()
                 if not stock or stock.stock < quantity:
-                    messgaes.error(request,'Problem in stock managing')
+                    messages.error(request,'Problem in stock managing')
                     return redirect('cart_summary')  # Redirect to cart if stock issue
-                
+                size_object=Size.objects.get(id=size)
                 # Create order item and update stock
+                
                 OrderItem.objects.create(
                     order=order,
                     product=product,
                     quantity=quantity,
                     price=product.sale_price if product.is_sale else product.price,
-                    size=size
+                    size=size_object
                 )
                 if size:
                     stock.stock -= quantity
                     stock.save()
+            else:
+                stock = ProductStock.objects.filter(product=product).first()
+                if not stock or stock.stock < quantity:
+                    messages.error(request, 'Problem in stock management')
+                    return redirect('cart_summary')
+                OrderItem.objects.create(
+                    order=order,
+                    product=product,
+                    quantity=quantity,
+                    price=product.sale_price if product.is_sale else product.price,
+                    size=None  
+                )
+                
+                
+                stock.decreaseStock(quantity)
         payment = paypalrestsdk.Payment({
             "intent": "sale",
             "payer": {

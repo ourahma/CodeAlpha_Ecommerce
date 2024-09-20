@@ -50,12 +50,12 @@ class ProductStock(models.Model):
     size = models.ForeignKey(Size, related_name='stock', null=True, blank=True, on_delete=models.SET_NULL)  
     stock = models.PositiveIntegerField()
     
-    def increaseStock():
-        self.stock += 1
+    def increaseStock(self,qty):
+        self.stock += qty
         self.save()
-    def decreaseStock():
+    def decreaseStock(self,qty):
         if self.stock > 0:
-            self.stock -= 1
+            self.stock -= qty
             self.save()
     def is_in_stock(self):
         return self.stock > 0
