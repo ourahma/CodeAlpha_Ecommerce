@@ -36,6 +36,7 @@
     />
 
     <link rel="stylesheet" href="{% static 'css/templatemo-hexashop.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/stylecard.css' %}" />
 
     <link rel="stylesheet" href="{% static 'css/owl-carousel.css' %}" />
 
@@ -98,9 +99,9 @@
                 <li class="submenu">
                   <a href="javascript:;">Pages</a>
                   <ul>
-                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="{% url 'about' %}">About Us</a></li>
                     
-                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="{% url 'contact' %}">Contact Us</a></li>
                   </ul>
                 </li>
                 {% comment %} list Categories {% endcomment %}
@@ -236,9 +237,9 @@
             <h4>Useful Links</h4>
             <ul>
               
-              <li><a href="#">About Us</a></li>
+              <li><a href="{% url 'about' %}">About Us</a></li>
               
-              <li><a href="#">Contact Us</a></li>
+              <li><a href="{% url 'contact' %}">Contact Us</a></li>
             </ul>
           </div>
           

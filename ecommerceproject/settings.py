@@ -1,7 +1,7 @@
 from pathlib import Path
 import os
-
 from dotenv import load_dotenv
+
 
 # Load the .env file
 load_dotenv()
@@ -24,6 +24,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'paypal.standard.ipn',
     'cart',
     'ecommerceapp.apps.EcommerceappConfig',
     'django.contrib.admin',
@@ -143,3 +144,9 @@ EMAIL_HOST_USER = mail
 EMAIL_HOST_PASSWORD = mail_pass
 DEFAULT_FROM_EMAIL = mail
 EMAIL_SUBJECT_PREFIX = "Réinitialisation de mot de passe"
+
+#payement 
+PAYPAL_TEST = True
+PAYPAL_RECEIVER_EMAIL =os.environ.get("PAYPAL_RECEIVER_EMAIL")
+PAYPAL_CLIENT_ID=os.environ.get("CLIENT_ID")
+PAYPAL_SECRET=os.environ.get("SECRET_KEY")

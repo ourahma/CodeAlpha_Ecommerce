@@ -90,3 +90,6 @@ class Cart():
             else:
                 total += product.price * quantity
         return total
+    
+    def clear(self):
+        self.session.flush()

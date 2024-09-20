@@ -3,8 +3,16 @@ from .cart import Cart
 from ecommerceapp.models import *
 from django.http import JsonResponse
 from django.contrib import messages
-import stripe
+## for checkout
+import paypalrestsdk
 from django.conf import settings
+from django.urls import reverse
+
+
+
+
+
+
 
 def cart_add(request, product_id):
     cart = Cart(request)
@@ -91,22 +99,10 @@ def checkout(request):
 
         # Handle POST request (confirming the order)
         if request.method == 'POST':
-             # Retrieve payment information from the form
-            card_number = request.POST.get('cardNumber')
-            expiry_date = request.POST.get('expiryDate')
-            cvv = request.POST.get('cvv')
-
-            
-            
-            cart_items = cart.cart  # Accessing the raw cart data directly
-
-            # Create a new order
-            total_amount = cart.cart_total()
             order = Order.objects.create(
-                customer=request.user.customer,
+                customer=user,
                 total_amount=total_amount
             )
-
             # Process each item in the cart
             for product_id, item in cart_items.items():
                 product = Product.objects.get(id=product_id)
@@ -131,6 +127,8 @@ def checkout(request):
                 if size:
                     stock.stock -= quantity
                     stock.save()
+                    
+               
 
             # Clear the cart after checkout
             cart.clear()
@@ -153,7 +151,103 @@ def checkout(request):
                 })
 
             context = {
+                'key':settings.STRIPE_PUBLIC_KEY,
                 'cart_items': cart_items,
                 'total_amount': total_amount,
             }
-            return render(request, 'checkout.html', context)
+            return render(request, 'verify.html', context)
+
+
+
+
+#### paypal checkout section
+
+paypalrestsdk.configure({
+    "mode": "sandbox",  
+    "client_id": settings.PAYPAL_CLIENT_ID,
+    "client_secret": settings.PAYPAL_SECRET,
+})
+
+def create_payment(request):
+    if request.method == 'POST':
+        user=request.user
+        cart=Cart(request)
+        products = cart.get_prods()  # Get products from the cart
+        quantities = cart.get_quants()  # Get quantities and sizes from the cart
+        total_amount = cart.cart_total()
+        order = Order.objects.create(
+                customer=user.customer,
+                total_amount=total_amount
+            )
+        cart_items = cart.get_quants
+            # Process each item in the cart
+        for product_id, item in cart_items.items():
+            product = Product.objects.get(id=product_id)
+            quantity = item['quantity']
+            size = item['size'] if item['size'] else None
+
+                # Check stock availability
+            if size:
+                stock = ProductStock.objects.filter(product=product, size=size).first()
+                if not stock or stock.stock < quantity:
+                    messgaes.error(request,'Problem in stock managing')
+                    return redirect('cart_summary')  # Redirect to cart if stock issue
+                
+                # Create order item and update stock
+                OrderItem.objects.create(
+                    order=order,
+                    product=product,
+                    quantity=quantity,
+                    price=product.sale_price if product.is_sale else product.price,
+                    size=size
+                )
+                if size:
+                    stock.stock -= quantity
+                    stock.save()
+        payment = paypalrestsdk.Payment({
+            "intent": "sale",
+            "payer": {
+                "payment_method": "paypal",
+            },
+            "redirect_urls": {
+                "return_url": request.build_absolute_uri(reverse('execute_payment')),
+                "cancel_url": request.build_absolute_uri(reverse('payment_failed')),
+            },
+            "transactions": [
+                {
+                    "amount": {
+                        "total": str(total_amount), 
+                        "currency": "USD",
+                    },
+                    "description": "Payment for Product/Service",
+                }
+            ],
+        })
+    
+
+        if payment.create():
+            return redirect(payment.links[1].href)  # Redirect to PayPal for payment
+        else:
+            return render(request, 'payment_failed.html')
+    else:
+        messages.error(request,"Access denied ")
+        return redirect("dashboard")
+
+def execute_payment(request):
+    payment_id = request.GET.get('paymentId')
+    payer_id = request.GET.get('PayerID')
+
+    payment = paypalrestsdk.Payment.find(payment_id)
+
+    if payment.execute({"payer_id": payer_id}):
+        cart = Cart(request)
+        cart.clear()
+        return render(request, 'payment_success.html')
+    else:
+        return render(request, 'payment_failed.html')
+
+def payment_checkout(request):
+    return render(request, 'checkout.html')
+
+def payment_failed(request):
+    return render(request, 'payment_failed.html')

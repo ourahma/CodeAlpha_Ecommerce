@@ -12,7 +12,11 @@ from django.contrib.auth.forms import *
 
 
 
+
+
 def dashboard(request):
+    cart=Cart(request)
+    print(cart.get_quants())
     categories=Category.objects.all()
     products = Product.objects.all().prefetch_related('stock__size')
     for product in products:
@@ -33,7 +37,22 @@ def explore(request):
         'products':products
     })
     
-
+def contact(request):
+    categories=Category.objects.all()
+    products=Product.objects.all()
+    return render(request, 'contact.html',{
+        'categories': categories,
+        'products':products
+    })
+    
+    
+def about(request):
+    categories=Category.objects.all()
+    products=Product.objects.all()
+    return render(request, 'about.html',{
+        'categories': categories,
+        'products':products
+    })
 
 def view_product(request, product_id):
     modify_mode = request.GET.get('modify', 'false') == 'true'
@@ -105,7 +124,7 @@ def login_user(request):
         if user is not None:
             login(request,user)
             messages.success(request,("You have been logged in "))
-            return redirect('checkout')
+            return redirect('verify')
         else:
             messages.ERROR(request,("There was an error, please try again "))
             return redirect('login_user')
@@ -140,8 +159,8 @@ def register_user(request):
     else:
         return render(request, 'register.html', {'form': form})
     
-def validate(request):
-    return render(request,'validate.html',{})
+def order_success(request):
+    return render(request,'order_success.html',{})
 
 
 ############################## RESERT PASSWORD BY EMAIL
@@ -196,3 +215,44 @@ def activate(request, uidb64, token):
         messages.error(request, 'Le lien d\'activation est invalide !')
         return redirect('register')
     
+    
+def verify(request):
+    if  request.user.is_authenticated:
+        if request.method == 'POST':
+            address=request.POST.get("address")
+            city=request.POST.get("city")
+            country=request.POST.get("country")
+            postal_code=request.POST.get("postal_code")
+            user=request.user
+            user.address=address
+            user.city=city
+            user.country=country
+            user.postal_code=postal_code
+            user.save()
+            return redirect("checkout_payment")
+        else:
+            cart=Cart(request)
+            products = cart.get_prods()  # Get products from the cart
+            quantities = cart.get_quants()  # Get quantities and sizes from the cart
+            total_amount = cart.cart_total()
+
+            # Prepare the cart items to pass to the template
+            cart_items = []
+            for product in products:
+                product_id = str(product.id)
+                cart_items.append({
+                    'product': product,
+                    'quantity': quantities[product_id]['quantity'],
+                    'size': quantities[product_id].get('size', None),
+                })
+
+            context = {
+                'key':settings.STRIPE_PUBLIC_KEY,
+                'cart_items': cart_items,
+                'total_amount': total_amount,
+            }
+            return render(request,"verify.html",context)
+        
+    else:
+        messages.error(request,"You must log in first")
+        return redirect("login_user")

@@ -8,8 +8,10 @@ urlpatterns = [
     path('explore/',views.explore,name='explore'),
     path('product/<int:product_id>/', views.view_product, name='view_product'),
     path('category/<int:category_id>',views.single_category,name='category'),
+    path('contact/',views.contact,name='contact'),
+    path('about/',views.about,name='about'),
     
-    path('validate/',views.validate,name='validate'),
+   
     
     path('login/',views.login_user,name='login_user'),
    path('logout/',views.logout_user,name='logout_user'),
@@ -24,6 +26,13 @@ urlpatterns = [
     
     ### activate user email through email
     path('activate/<uidb64>/<token>/', views.activate, name='activate'),
+    
+    
+    ## order success
+    path('order_success',views.order_success,name="order_success"),
+    
+    ## register user address and verfying it 
+    path('verify',views.verify,name="verify")
    
 
 ]
