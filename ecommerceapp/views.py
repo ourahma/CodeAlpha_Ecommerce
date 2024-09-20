@@ -9,7 +9,8 @@ from django.contrib.auth import views as auth_views
 from django.urls import reverse_lazy
 from django.contrib.auth.forms import *
 
-
+from django.template.loader import render_to_string
+from django.core.mail import send_mail
 
 
 
@@ -17,6 +18,7 @@ from django.contrib.auth.forms import *
 def dashboard(request):
     cart=Cart(request)
     print(cart.get_quants())
+    
     categories=Category.objects.all()
     products = Product.objects.all().prefetch_related('stock__size')
     for product in products:
@@ -38,12 +40,29 @@ def explore(request):
     })
     
 def contact(request):
-    categories=Category.objects.all()
-    products=Product.objects.all()
-    return render(request, 'contact.html',{
-        'categories': categories,
-        'products':products
-    })
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+        
+        # Save the notification
+        admin = User.objects.get(is_staff=True)
+        
+        subject = "Contact admin form :  "+ email
+        email_message = render_to_string('notification_email.html', {
+                'user': admin,
+                'message': message
+            })
+        send_mail(subject, email_message, settings.DEFAULT_FROM_EMAIL, [admin.email])
+
+        messages.success(request,"Your message is sent seccessfully! ")
+        return redirect('contact')  
+    else:
+        categories=Category.objects.all()
+        products=Product.objects.all()
+        return render(request, 'contact.html',{
+            'categories': categories,
+            'products':products
+        })
     
     
 def about(request):
@@ -231,6 +250,8 @@ def verify(request):
             user.save()
             return redirect("checkout_payment")
         else:
+            user=request.user
+            print(user)
             cart=Cart(request)
             products = cart.get_prods()  # Get products from the cart
             quantities = cart.get_quants()  # Get quantities and sizes from the cart
@@ -244,6 +265,7 @@ def verify(request):
                     'product': product,
                     'quantity': quantities[product_id]['quantity'],
                     'size': quantities[product_id].get('size', None),
+                    'user':user,
                 })
 
             context = {
