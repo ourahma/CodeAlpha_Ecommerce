@@ -32,8 +32,12 @@ class UpdateUserForm(UserChangeForm):
 
     email = forms.EmailField(label="", widget=forms.TextInput(attrs={
         'class': 'form-control mb-3',  
+<<<<<<< HEAD
         'placeholder': 'Email Address',
         'disabled':True
+=======
+        'placeholder': 'Email Address'
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
     }), required=False)
     
     first_name = forms.CharField(label="", max_length=100, widget=forms.TextInput(attrs={
@@ -45,7 +49,10 @@ class UpdateUserForm(UserChangeForm):
         'class': 'form-control mb-3',  
         'placeholder': 'Last Name'
     }), required=False)
+<<<<<<< HEAD
     
+=======
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
 
     class Meta:
         model = User
@@ -116,6 +123,7 @@ class SignUpForm(UserCreationForm):
 
 
 class UserInfoForm(forms.ModelForm):
+<<<<<<< HEAD
     password=None
     
     phone_number=forms.CharField(label="",widget=forms.TextInput(attrs={'class':'form-control mb-3','placeholder':'Phone'}),required=False)
@@ -150,3 +158,15 @@ class UserInfoForm(forms.ModelForm):
         self.fields['city'].label = 'City'
         self.fields['postal_code'].label = 'Postal code'
         self.fields['country'].label = 'Country'
+=======
+     
+    phone_number=forms.CharField(label="",widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Phone'}),required=False)
+    adresse=forms.CharField(label="",widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Addresse 1'}),required=False)
+    city=forms.CharField(label="",widget=forms.TextInput(attrs={'class':'form-control','placeholder':'City'}),required=False)
+    postal_code=forms.CharField(label="",widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Zip Code'}),required=False)
+    country=forms.CharField(label="",widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Country'}),required=False)
+    
+    class Meta:
+        model = Customer
+        fields= ('phone_number','adresse','city','postal_code','country')
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78

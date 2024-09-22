@@ -41,6 +41,26 @@
     <link rel="stylesheet" href="{% static 'css/owl-carousel.css' %}" />
 
     <link rel="stylesheet" href="{% static 'css/lightbox.css' %}" />
+<<<<<<< HEAD
+=======
+   
+<style>
+.alert {
+    background-color: white !important;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: opacity 0.15s linear;
+}
+
+.alert.fade {
+    opacity: 0;
+}
+
+.alert.show {
+    opacity: 1;
+}
+</style>
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
 
   </head>
 
@@ -138,9 +158,42 @@
     <!-- ***** Header Area End ***** -->
 
     {% if messages %}
+<<<<<<< HEAD
         {% include 'alert.html' %}
     {% endif %}
 
+=======
+    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+        {% for message in messages %}
+            {% if message.tags == 'warning' %}
+                <div class="alert alert-warning alert-dismissible fade show" role="alert" style="background-color: white;" id="alert-{{ forloop.counter }}">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
+                        <strong>Warning:</strong> {{ message }}
+                        <button type="button" class="btn-close" aria-label="Close" onclick="closeAlert('alert-{{ forloop.counter }}')"></button>
+                    </div>
+                </div>
+            {% elif message.tags == 'success' %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert" style="background-color: white;" id="alert-{{ forloop.counter }}">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        <strong>Success:</strong> {{ message }}
+                        <button type="button" class="btn-close" aria-label="Close" onclick="closeAlert('alert-{{ forloop.counter }}')"></button>
+                    </div>
+                </div>
+            {% else %}
+                <div class="alert alert-danger alert-dismissible fade show" role="alert" style="background-color: white;" id="alert-{{ forloop.counter }}">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-x-circle-fill text-danger me-2"></i>
+                        <strong>Error:</strong> {{ message }}
+                        <button type="button" class="btn-close" aria-label="Close" onclick="closeAlert('alert-{{ forloop.counter }}')"></button>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
 
 
 
@@ -245,9 +298,12 @@
     <script src="{% static 'js/lightbox.js' %}"></script>
     <script src="{% static 'js/isotope.js' %}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<<<<<<< HEAD
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
 
+=======
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
 
     <!-- Global Init -->
     <script src="{% static 'js/custom.js' %}"></script>

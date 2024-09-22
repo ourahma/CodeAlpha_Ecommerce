@@ -131,9 +131,14 @@ STRIPE_PUBLIC_KEY = os.getenv('STRIPE_PUBLIC_KEY')
 STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
 
 mail=os.environ.get("MAIL")
+<<<<<<< HEAD
 DEFAULT_FROM_EMAIL =os.environ.get("mail")
 mail_pass=os.environ.get("MAIL_PASSWORD")
 print(mail)
+=======
+mail_pass=os.environ.get("MAIL_PASSWORD")
+
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
 ## Mailing backend
 
 EMAIL_LOG_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -151,9 +156,12 @@ PAYPAL_TEST = True
 PAYPAL_RECEIVER_EMAIL =os.environ.get("PAYPAL_RECEIVER_EMAIL")
 PAYPAL_CLIENT_ID=os.environ.get("CLIENT_ID")
 PAYPAL_SECRET=os.environ.get("SECRET_KEY")
+<<<<<<< HEAD
 
 ## pay with card
 
 BRAINTREE_MERCHANT_ID = os.environ.get('Merchant_ID')
 BRAINTREE_PUBLIC_KEY  = os.environ.get("Public_key")
 BRAINTREE_PRIVATE_KEY  = os.environ.get("Private_key")
+=======
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78

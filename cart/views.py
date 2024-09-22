@@ -9,11 +9,14 @@ from django.conf import settings
 from django.urls import reverse
 
 
+<<<<<<< HEAD
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
 
 from django.utils import timezone 
 
+=======
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
 
 
 
@@ -34,7 +37,11 @@ def cart_add(request, product_id):
     if added :
 
         # Handle AJAX request
+<<<<<<< HEAD
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':  
+=======
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':  # This is an AJAX request
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
             response = JsonResponse({
                 'qty': cart_quantity,
             })
@@ -47,7 +54,11 @@ def cart_add(request, product_id):
             return redirect('dashboard')
     else:
         # Handle AJAX request
+<<<<<<< HEAD
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':  
+=======
+        if request.headers.get('x-requested-with') == 'XMLHttpRequest':  # This is an AJAX request
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
             response = JsonResponse({
                 'qty': cart_quantity,
             })
@@ -177,8 +188,13 @@ def create_payment(request):
     if request.method == 'POST':
         user=request.user
         cart=Cart(request)
+<<<<<<< HEAD
         products = cart.get_prods()  
         quantities = cart.get_quants()  
+=======
+        products = cart.get_prods()  # Get products from the cart
+        quantities = cart.get_quants()  # Get quantities and sizes from the cart
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
         total_amount = cart.cart_total()
         order = Order.objects.create(
                 customer=user.customer,
@@ -225,8 +241,11 @@ def create_payment(request):
                 
                 
                 stock.decreaseStock(quantity)
+<<<<<<< HEAD
                 
                 send_validate_order_email(request.user,order,total_amount,timezone.now())
+=======
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
         payment = paypalrestsdk.Payment({
             "intent": "sale",
             "payer": {
@@ -265,12 +284,16 @@ def execute_payment(request):
     if payment.execute({"payer_id": payer_id}):
         cart = Cart(request)
         cart.clear()
+<<<<<<< HEAD
         
+=======
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
         return render(request, 'payment_success.html')
     else:
         return render(request, 'payment_failed.html')
 
 def payment_checkout(request):
+<<<<<<< HEAD
     user = request.user
     return render(request, 'checkout.html',{})
 
@@ -297,3 +320,9 @@ def send_validate_order_email(user,order,total_amount,order_date):
         fail_silently=False, 
         html_message=email_body  
     )
+=======
+    return render(request, 'checkout.html')
+
+def payment_failed(request):
+    return render(request, 'payment_failed.html')
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78

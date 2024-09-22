@@ -4,6 +4,7 @@ body {
     font-family: "Poppins", sans-serif;
     color: #444444;
 }
+<<<<<<< HEAD
 .text-background {
     background-color: #488cbdd3; 
     padding: 20px;
@@ -11,6 +12,8 @@ body {
     border-radius: 5px;
    
 }
+=======
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
 
 a,
 a:hover {

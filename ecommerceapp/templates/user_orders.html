@@ -10,7 +10,11 @@
         <table class="table table-bordered table-striped table-hover">
             <thead class="table-dark">
                 <tr>
+<<<<<<< HEAD
                     
+=======
+                    <th scope="col">Order ID</th>
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
                     <th scope="col">Total Amount</th>
                     <th scope="col">Status</th>
                     <th scope="col">Order Items</th>
@@ -19,7 +23,11 @@
             <tbody>
                 {% for order in orders %}
                 <tr>
+<<<<<<< HEAD
                     
+=======
+                    <td>{{ order.id }}</td>
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
                     <td>${{ order.total_amount }}</td>
                     <td>
                         <span class="badge {% if order.status == 'Pending' %} bg-warning {% elif order.status == 'Shipped' %} bg-info {% elif order.status == 'Delivered' %} bg-success {% elif order.status == 'Cancelled' %} bg-danger {% endif %}">

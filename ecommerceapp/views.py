@@ -12,7 +12,11 @@ from django.contrib.auth.forms import *
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
 
+<<<<<<< HEAD
 from django.conf import settings
+=======
+
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
 
 
 def dashboard(request):
@@ -33,10 +37,14 @@ def dashboard(request):
     
 def explore(request):
     categories=Category.objects.all()
+<<<<<<< HEAD
     products = Product.objects.all().prefetch_related('stock__size')
     for product in products:
         
         product.in_stock = sum(stock.stock for stock in product.stock.all()) > 0
+=======
+    products=Product.objects.all()
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
     return render(request, 'explore.html',{
         'categories': categories,
         'products':products
@@ -110,7 +118,10 @@ def view_product(request, product_id):
         'categories': categories,
         'products': products,
         'totals': totals,
+<<<<<<< HEAD
         'total_stock':total_stock,
+=======
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
         'modify': modify_mode,
         'sizes': sizes_in_stock,  # Pass sizes that are in stock
         'selected_size': selected_size,
@@ -151,7 +162,11 @@ def login_user(request):
             messages.success(request,("You have been logged in "))
             return redirect('verify')
         else:
+<<<<<<< HEAD
             messages.error(request,"There was an error, please try again ")
+=======
+            messages.ERROR(request,("There was an error, please try again "))
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
             return redirect('login_user')
     else:
         return render(request,'login.html',{})
@@ -275,7 +290,10 @@ def verify(request):
                 })
 
             context = {
+<<<<<<< HEAD
                 
+=======
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
                 'key':settings.STRIPE_PUBLIC_KEY,
                 'cart_items': cart_items,
                 'total_amount': total_amount,
@@ -296,14 +314,20 @@ def profile(request):
     user=request.user
     updatepswdform=ChangePasswordForm(request.user,request.POST)
     updateuserform=UpdateUserForm(user=request.user)
+<<<<<<< HEAD
     infouserform=UserInfoForm(user=request.user)
+=======
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
     
     
     return render(request,'profile.html',{
         'user':user,
         'updatepswdform':updatepswdform,
         'updateuserform':updateuserform,
+<<<<<<< HEAD
         'infouserform':infouserform
+=======
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
         })
     
     
@@ -341,6 +365,7 @@ def update_info(request):
     if request.user.is_authenticated:
         try:
             current_user = Customer.objects.get(user=request.user)
+<<<<<<< HEAD
             form = UpdateUserForm(request.POST or None, instance=current_user)
         except Customer.DoesNotExist:
             # Handle the case where Profile does not exist for the user
@@ -370,6 +395,13 @@ def update_address_info(request):
             # Handle the case where Profile does not exist for the user
             messages.error(request, "Customer does not exist. Please create your profile.")
             return redirect('home')  # Redirect to a view to create the profile
+=======
+            form = UserInfoForm(request.POST or None, instance=current_user)
+        except Customer.DoesNotExist:
+            # Handle the case where Profile does not exist for the user
+            messages.error(request, "Profile does not exist. Please create your profile.")
+            return redirect('profile')  # Redirect to a view to create the profile
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
         
         if form.is_valid():
             form.save()
@@ -382,4 +414,8 @@ def update_address_info(request):
         return render(request, "profile.html", {'form': form})
     else:
         messages.error(request, "You must be logged in")
+<<<<<<< HEAD
         return redirect('profile')
+=======
+        return redirect('dashboard')
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78

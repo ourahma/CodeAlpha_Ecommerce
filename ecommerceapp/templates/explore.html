@@ -2,7 +2,167 @@
 
 {% block content %}
     {% load static %} 
+<<<<<<< HEAD
     <br><br><br><br><br><br>
    
 {% include 'explore-products.html' %}
 {% endblock content %}
+=======
+    <br><br><br>
+    {% for category in categories %}
+<section class="section" id="men">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-6">
+        <div class="section-heading">
+          <h2>{{ category.name }}</h2>
+          <span>{{ category.description }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Row for Products -->
+  <div class="container">
+    <div class="row">
+      {% for product in products %} 
+      {% if product.category.name == category.name %}
+
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="thumb-wrapper mb-4">
+          <div class="img-box">
+            <img
+              src="{{ product.image.url }}"
+              class="img-responsive"
+              alt="{{ product.name }}"
+            />
+          </div>
+          <div class="thumb-content">
+            <h4>{{ product.name }}</h4>
+            <p class="item-price">
+              {% if product.is_sale %}
+              <strike>{{ product.price }} {{product.currency }}</strike>
+              <span>{{ product.sale_price}} {{product.currency }}</span>
+              {% else %}
+              <span>{{ product.price}} {{product.currency }}</span>
+              {% endif %}
+            </p>
+
+            <div class="star-rating"></div>
+            <form
+              class="d-flex justify-content-center align-items-end"
+              method="POST"
+              action="{% url 'add' product.id %}"
+            >
+            {% csrf_token %}
+              <!-- Add to Cart Icon -->
+              <button
+                href="{% url 'add' product.id %}"
+                class="btn btn-outline-dark me-2"
+              >
+                <input
+                  type="hidden"
+                  value="{{ product.id }}"
+                  name="product_id"
+                />
+                <i class="bi bi-cart-fill"></i>
+              </button>
+
+              <!-- View Details Icon -->
+              <a
+                href="{% url 'view_product' product.id %}"
+                class="btn btn-outline-dark"
+              >
+                <i class="bi bi-eye"></i>
+              </a>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      {% endif %} 
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endfor %}
+
+{% endblock content %}
+    {% load static %} {% for category in categories %}
+<section class="section" id="men">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-6">
+        <div class="section-heading">
+          <h2>{{ category.name }}</h2>
+          <span>{{ category.description }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Row for Products -->
+  <div class="container">
+    <div class="row">
+      {% for product in products %} 
+      {% if product.category.name == category.name %}
+
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="thumb-wrapper mb-4">
+          <div class="img-box">
+            <img
+              src="{{ product.image.url }}"
+              class="img-responsive"
+              alt="{{ product.name }}"
+            />
+          </div>
+          <div class="thumb-content">
+            <h4>{{ product.name }}</h4>
+            <p class="item-price">
+              {% if product.is_sale %}
+              <strike>{{ product.price }} {{product.currency }}</strike>
+              <span>{{ product.sale_price}} {{product.currency }}</span>
+              {% else %}
+              <span>{{ product.price}} {{product.currency }}</span>
+              {% endif %}
+            </p>
+
+            <div class="star-rating"></div>
+            <form
+              class="d-flex justify-content-center align-items-end"
+              method="POST"
+              action="{% url 'add' product.id %}"
+            >
+            {% csrf_token %}
+              <!-- Add to Cart Icon -->
+              <button
+                href="{% url 'add' product.id %}"
+                class="btn btn-outline-dark me-2"
+              >
+                <input
+                  type="hidden"
+                  value="{{ product.id }}"
+                  name="product_id"
+                />
+                <i class="bi bi-cart-fill"></i>
+              </button>
+
+              <!-- View Details Icon -->
+              <a
+                href="{% url 'view_product' product.id %}"
+                class="btn btn-outline-dark"
+              >
+                <i class="bi bi-eye"></i>
+              </a>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      {% endif %} 
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endfor %}
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78

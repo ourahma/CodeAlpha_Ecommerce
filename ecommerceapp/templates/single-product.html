@@ -64,12 +64,18 @@
               
               <div class="quantity buttons_added">
                 <input type="button" value="-" class="minus" />
+<<<<<<< HEAD
                
+=======
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
                 <input
                   type="number"
                   step="1"
                   min="1"
+<<<<<<< HEAD
                   max=" {{ total_stock }}"
+=======
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
                   name="quantity"
                   value="{{ product_quantity }}"
                   title="Qty"
@@ -86,6 +92,12 @@
             <div class="main-border-button">
               
               {% if is_in_stock %}
+<<<<<<< HEAD
+=======
+                
+              
+                
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
               {% if not added %}
               {% if modify %}
               
@@ -127,12 +139,18 @@
     $(document).on("click", ".plus", function () {
       var $input = $(this).siblings("#product-quantity");
       var currentVal = parseInt($input.val(), 10);
+<<<<<<< HEAD
       var maxVal = parseInt($input.attr('max'), 10); // Get max value
 
     if (!isNaN(currentVal) && currentVal < maxVal) {
         $input.val(currentVal + 1);
     }
       
+=======
+      if (!isNaN(currentVal)) {
+        $input.val(currentVal + 1);
+      }
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
     });
 
     // Decrement quantity

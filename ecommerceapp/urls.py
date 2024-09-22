@@ -47,8 +47,11 @@ urlpatterns = [
     
     path('update_password/',views.update_password,name='update_password'),
     path('update_info/',views.update_info,name='update_info'),
+<<<<<<< HEAD
     
     ## update address info
     path('update_address_info/',views.update_address_info,name='update_address_info')
+=======
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
 
 ]

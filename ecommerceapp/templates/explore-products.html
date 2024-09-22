@@ -24,7 +24,10 @@
               src="{{ product.image.url }}"
               class="img-responsive"
               alt="{{ product.name }}"
+<<<<<<< HEAD
               width="90%"
+=======
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
             />
           </div>
           <div class="thumb-content">
@@ -48,7 +51,11 @@
                   {% if product.stock.all|length > 0 and product.stock.all.0.size %}
                   <div class="col-12 mb-2">
                       <div class="form-group">
+<<<<<<< HEAD
                         <br><br>
+=======
+                        <br>
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
                           <label for="size-select-{{ product.id }}">Choose size:</label>
                           <select name="size" id="size-select-{{ product.id }}" class="form-control">
                               {% for stock in product.stock.all %}

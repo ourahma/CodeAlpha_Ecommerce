@@ -4,10 +4,14 @@
 {% if cart_products %}
 
 <div class="container">
+<<<<<<< HEAD
   <h4 class="align-items-center"> <i class="bi bi-cart-fill"></i> Your cart</h4> 
   <br><br>
   <div class="row">
     
+=======
+  <div class="row">
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
     {% for product in cart_products %}
 
     <div class="col-lg-3 col-md-4 col-sm-6">
@@ -18,11 +22,17 @@
             src="{{ product.image.url }}"
             class="img-responsive"
             alt="{{ product.name }}"
+<<<<<<< HEAD
             width="90%"
           />
         </div>
         <div class="thumb-content">
           <br>
+=======
+          />
+        </div>
+        <div class="thumb-content">
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
           <h4>{{ product.name }}</h4>
           <p class="item-price">
             {% if product.is_sale %}

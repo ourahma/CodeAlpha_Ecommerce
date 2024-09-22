@@ -209,9 +209,15 @@ header
 }
 
 .header-area {
+<<<<<<< HEAD
   border-bottom: 3px dotted #0c0476;
   box-shadow: none;
   background-color: #fafafa;
+=======
+  border-bottom: 3px dotted #eee;
+  box-shadow: none;
+  background-color: #fff;
+>>>>>>> 9a7a0e255a2457621c4ad9a03d5356a66f9b2a78
   position: absolute;
   top: 0px;
   left: 0px;
