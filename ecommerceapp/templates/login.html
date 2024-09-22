@@ -1,0 +1,51 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<br /><br /><br />
+<br /><br /><br />
+
+<!-- Header-->
+<header class="bg-dark py-5">
+  <div class="container px-4 px-lg-5 my-5">
+    <div class="text-center text-white">
+      <h1 class="display-4 fw-bolder">LOG IN</h1>
+      <p class="lead fw-normal text-white-50 mb-0">Log into your account</p>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <br /><br /><br />
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      <form method="post" action="{% url 'login_user' %}">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Username</label>
+          <input
+            type="text"
+            class="form-control"
+            name="username"
+            placeholder="Enter your Username"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label">Password</label>
+          <input
+            name="password"
+            type="password"
+            class="form-control"
+            placeholder="Enter your Password"
+          />
+        </div>
+
+        <button type="submit" class="btn btn-secondary">LOG IN</button>
+      </form>
+      <br>
+      <a href="{% url 'password_reset' %}">Forget Password ?</a><br>
+      <a href="{% url 'register' %}"> You don't have an account ?</a>
+    </div>
+  </div>
+</div>
+
+
+<br /><br /><br /><br /><br /><br /><br /><br /><br />
+{% endblock content %}

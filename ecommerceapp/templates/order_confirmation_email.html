@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+</head>
+<body>
+    <h2>Hello {{ user.first_name }},</h2>
+    <p>Thank you for your order! We're pleased to let you know that your order has been registered and is now being processed.</p>
+    <p><strong>Order Details:</strong></p>
+    <ul>
+        <li>Order Number: {{ order.id }}</li>
+        <li>Order Total: $ {{ total_amount }}</li>
+        <li>Order Date: {{ order_date|date:"Y-m-d H:i" }}</li>
+    </ul>
+    <p>You will receive a notification once your order has been shipped.</p>
+    <p>Thank you for shopping with us!</p>
+    <p>Best regards,<br>CorgeyCart</p>
+</body>
+</html>

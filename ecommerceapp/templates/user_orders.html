@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<br><br><br>
+<div class="container mt-5">
+    <h1 class="mb-4">Your Orders</h1>
+
+    {% if orders %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    
+                    <th scope="col">Total Amount</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Order Items</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    
+                    <td>${{ order.total_amount }}</td>
+                    <td>
+                        <span class="badge {% if order.status == 'Pending' %} bg-warning {% elif order.status == 'Shipped' %} bg-info {% elif order.status == 'Delivered' %} bg-success {% elif order.status == 'Cancelled' %} bg-danger {% endif %}">
+                            {{ order.status }}
+                        </span>
+                    </td>
+                    <td>
+                        <table class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Product</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Size</th>
+                                    <th scope="col">Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in order.items.all %}
+                                <tr>
+                                    <td>{{ item.product.name }}</td>
+                                    <td>{{ item.quantity }}</td>
+                                    <td>{{ item.size }}</td>
+                                    <td>${{ item.price }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <br><br><br><br><br><br>
+    <center>
+        <p class="text-muted">You have no orders.</p>
+    </center>
+    <br><br><br>
+    <br><br><br>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- ***** Main Banner Area Start ***** -->
+<div class="page-heading" id="top">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="inner-content">
+          <h2>GorgyCart</h2>
+          <span>Shop Smarter &amp; Live Better</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ***** Main Banner Area End ***** -->
+
+<!-- ***** Product Area Starts ***** -->
+<section class="section" id="product">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="left-images">
+          <img src="{{ singleproduct.image.url }}" alt="" />
+        </div>
+      </div>
+      <div class="col-lg-4">
+        <div class="right-content">
+          <h4>{{ singleproduct.name }}</h4>
+          <span class="price">
+            {% if singleproduct.is_sale %}
+            <strike>{{ singleproduct.price }} {{ singleproduct.currency }}</strike>
+            <span>{{ singleproduct.sale_price }} {{ singleproduct.currency }}</span>
+            {% else %}
+            <span>{{ singleproduct.price }} {{ singleproduct.currency }}</span>
+            {% endif %}
+          </span>
+
+          <span>{{ singleproduct.description }}</span>
+          <span>
+            {% if sizes %}
+              <div class="form-group">
+                  <label for="product-size">Size:</label>
+                  <select id="product-size" name="size" class="form-control">
+                      
+                      {% for size in sizes %}
+                          <option value="{{ size.id }}" {% if size.id|stringformat:"s" == selected_size|stringformat:"s" %}selected{% endif %}>{{ size.name }}</option>
+                      {% endfor %}
+                  </select>
+              </div>
+          {% endif %}
+
+            
+          </span>
+           <!-- Size Selection (only if sizes are available) -->
+           
+
+          <div class="quantity-content">
+            <div class="left-content">
+              <h6>No. of Orders</h6>
+            </div>
+            <div class="right-content">
+              
+              <div class="quantity buttons_added">
+                <input type="button" value="-" class="minus" />
+               
+                <input
+                  type="number"
+                  step="1"
+                  min="1"
+                  max=" {{ total_stock }}"
+                  name="quantity"
+                  value="{{ product_quantity }}"
+                  title="Qty"
+                  class="input-text qty text"
+                  size="4"
+                  id="product-quantity"
+                />
+                <input type="button" value="+" class="plus" />
+              </div>
+            </div>
+          </div>
+          <div class="total">
+            <h4>Total: $ {{ totals }}</h4>
+            <div class="main-border-button">
+              
+              {% if is_in_stock %}
+              {% if not added %}
+              {% if modify %}
+              
+              {% else %}
+              <button
+                class="btn btn-secondary"
+                value="{{ singleproduct.id }}"
+                id="add-cart"
+                data-product-id="{{ singleproduct.id }}"
+              >
+                Add To Cart
+              </button>
+              {% endif %}
+              {% else %}
+              <button
+                class="btn btn-secondary update-cart"
+                value="{{ singleproduct.id }}"
+                id="modify"
+                data-index="{{ singleproduct.id }}"
+              >
+                Modify
+              </button>
+              {% endif %}
+              {% else %}
+              Out of stock
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function () {
+    // Increment quantity
+    $(document).on("click", ".plus", function () {
+      var $input = $(this).siblings("#product-quantity");
+      var currentVal = parseInt($input.val(), 10);
+      var maxVal = parseInt($input.attr('max'), 10); // Get max value
+
+    if (!isNaN(currentVal) && currentVal < maxVal) {
+        $input.val(currentVal + 1);
+    }
+      
+    });
+
+    // Decrement quantity
+    $(document).on("click", ".minus", function () {
+      var $input = $(this).siblings("#product-quantity");
+      var currentVal = parseInt($input.val(), 10);
+      if (!isNaN(currentVal) && currentVal > 1) {
+        $input.val(currentVal - 1);
+      }
+    });
+
+    // Add to cart
+    $(document).on("click", "#add-cart", function (e) {
+      e.preventDefault();
+      var productId = $(this).data("product-id");
+      var productQty = $("#product-quantity").val();
+      var sizeId = $("#product-size").val();
+      var url = "{% url 'add' 0 %}".replace("0", productId);
+
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: {
+          product_qty: productQty,
+          size: sizeId,
+          csrfmiddlewaretoken: "{{ csrf_token }}",
+          action: "post",
+        },
+        success: function (json) {
+          location.reload();
+        },
+        error: function (xhr, errmsg, err) {
+          console.log(err);
+        },
+      });
+    });
+
+    // Update cart
+    $(document).on('click', '.update-cart', function (e) {
+      e.preventDefault();
+      var productId = $(this).data('index');
+      var productQty = $("#product-quantity").val();
+     
+      var sizeId = $("#product-size").val();
+      console.log(sizeId)
+      $.ajax({
+        type: 'POST',
+        url: "{% url 'cart_update' %}",
+        data: {
+          size:1,
+          product_id: productId,
+          product_qty: productQty,
+          size_id: sizeId,
+          csrfmiddlewaretoken: '{{ csrf_token }}',
+          action: 'post'
+        },
+        success: function (json) {
+          location.reload();
+        },
+        error: function (xhr, errmsg, err) {
+          console.log(err);
+        }
+      });
+    });
+  });
+</script>
+
+{% endblock content %}
+<!-- ***** Product Area Ends ***** -->

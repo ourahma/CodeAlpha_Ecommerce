@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+<br><br><br><br>
+<header class="bg-dark py-5">
+    <div class="container px-4 px-lg-5 my-5">
+      <div class="text-center text-white">
+        <h1 class="display-4 fw-bolder">Verify your address </h1>
+        <p class="lead fw-normal text-white-50 mb-0">Verify you shipping address</p>
+      </div>
+    </div>
+</header>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        
+        <!-- Payment Information Column -->
+        <div class="col-lg-6">
+            <h4 class="mb-4">Payment Information</h4>
+            <form method="post" action="{% url 'verify' %}">
+                {% csrf_token %}
+                <div class="row">
+                    <!-- Address Field -->
+                    <div class="col-md-6 form-group mb-3">
+                        <label for="address">Your Address</label>
+                        <textarea name="address" class="form-control" id="address" placeholder="Enter your address" required rows="2" value="{{ user.customer.address }}"></textarea>
+                    </div>
+                    
+                    <!-- City Field -->
+                    <div class="col-md-3 form-group mb-3">
+                        <label for="city">City</label>
+                        <input type="text" name="city" class="form-control" id="city" placeholder="City" required value="{{ user.city }}">
+                    </div>
+                    
+                    
+                </div>
+                <div class="row">
+                    <!-- Country Field -->
+                    <div class="col-md-3 form-group mb-3">
+                        <label for="country">Country</label>
+                        <input type="text" name="country" class="form-control" id="country" placeholder="Country" required value="{{ user.country }}">
+                    </div>
+                     <!-- Postal Code Field -->
+                     <div class="col-md-3 form-group mb-3">
+                        <label for="postal_code">Postal Code</label>
+                        <input type="text" name="postal_code" class="form-control" id="postal_code" placeholder="Postal Code" required value="{{ user.postal_code }}">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-dark"> Go to checkout</button>
+            </form>
+        </div>
+
+        <!-- Order Summary Column -->
+        <div class="col-lg-6">
+            <h4 class="mb-4">Order Summary</h4>
+            <ul class="list-group mb-4">
+                {% for item in cart_items %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    {{ item.product.name }} (x{{ item.quantity }})
+                    <span>
+                        {% if item.product.is_sale %}
+                            ${{ item.product.sale_price }}
+                        {% else %}
+                            ${{ item.product.price }}
+                        {% endif %}
+                    </span>
+                </li>
+                {% endfor %}
+            </ul>
+            <div class="d-flex justify-content-between">
+                <h5>Total Amount:</h5>
+                <h5>${{ total_amount }}</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

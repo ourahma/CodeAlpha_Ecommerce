@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<br><br><br><br>
+<script src="https://js.braintreegateway.com/web/dropin/1.41.0/js/dropin.min.js"></script>
+<!-- Header -->
+<header class="bg-dark py-5">
+  <div class="container px-4 px-lg-5 my-5">
+    <div class="text-center text-white">
+      <h1 class="display-4 fw-bolder">Validate Your Order</h1>
+      <p class="lead fw-normal text-white-50 mb-0">Choose a Payment Method</p>
+    </div>
+  </div>
+</header>
+
+<!-- Styling -->
+<style>
+  .btn-style-1 {
+    background-color: #0070ba; 
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 100%; 
+    margin-bottom: 20px; 
+  }
+
+  .paypal-button {
+    background-color: #0070ba; 
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 18px;
+    cursor: pointer;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%; 
+  }
+
+  .paypal-button img {
+    margin-right: 10px;
+    width: 30px; 
+    height: auto;
+    border-radius:50%;
+  }
+
+  .paypal-button:hover {
+    background-color: #005ea6;
+  }
+
+  .payment-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50vh;
+  }
+
+  .payment-methods {
+    width: 100%;
+    max-width: 400px; 
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+</style>
+
+<!-- Payment Method Buttons -->
+<div class="container payment-container">
+  <div class="payment-methods text-center">
+    <!-- Braintree Card Payment Form -->
+    <form action="#" method="POST" id="payment-form" enctype="multipart/form-data">
+      {% csrf_token %}
+      <section>
+        <div class="bt-drop-in-wrapper">
+          <div id="dropin-container"></div>
+          <input type="hidden" id="nonce" name="payment_method_nonce" value="{{ client_token }}">
+        </div>
+      </section>
+      
+      <button class="btn-style-1"  type="submit" id="pay"><span>Pay with Card</span></button>
+      
+    </form>
+   
+
+    <!-- PayPal Payment Button -->
+    <form action="{% url 'create_payment' %}" method="POST">
+      {% csrf_token %}
+      <button type="submit" class="paypal-button">
+        <img src="{% static 'images/paypal_logo.png' %}" alt="PayPal Logo"> 
+        Pay with PayPal
+      </button>
+    </form>
+  </div>
+</div>
+<br><br>
+{% endblock content %}

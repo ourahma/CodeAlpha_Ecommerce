@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <br><br><br><br><br>
+    <div class="container mt-5">
+        <h1 class="mb-4">Your Profile</h1>
+        <div class="row">
+            <div class="col-md-6 ">
+                <div class="row mb-3">
+                    <h4 class="mb-4">Update your password</h4>
+                    <form method="POST" action="{% url 'update_password' %}" >
+                        {% csrf_token %} {{ updatepswdform.as_p }}
+                        <button class="btn btn-dark">Update Password</button>
+                    </form>
+                </div>
+                <div class="row mb-3">
+                    <h4 class="mb-4">Update your address info</h4>
+                    <form method="POST" action="{% url 'update_address_info' %}" >
+                        {% csrf_token %} {{ infouserform.as_p }}
+                        <button class="btn btn-dark">Update Adress Info</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-6 ">
+                <h4 class="mb-4">Update your personal data </h4>
+                <form method="POST" action="{% url 'update_info' %}" >
+                    {% csrf_token %} {{ updateuserform.as_p }}
+                    <button class="btn btn-dark">Update Info</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+    

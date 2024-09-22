@@ -1,0 +1,120 @@
+{% extends 'base.html' %}{% load static %}
+
+{% block content %}
+  
+
+  
+<!-- ***** Main Banner Area Start ***** -->
+<div class="main-banner" id="top">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="left-content">
+          <div class="thumb">
+            <div class="inner-content mb-3 text-background">
+              <h4 class="text-black-50">GorgyCart</h4>
+              <span class="text-black-50">Shop Smarter &amp; , Live Better</span>
+              <div class="main-border-button">
+                <a href="{% url 'explore' %}" class="text-black-50">Purchase Now!</a>
+              </div>
+            </div>
+            <img src="{% static 'images/welcome.jpeg' %}" alt="" />
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="right-content">
+          <div class="row">
+            {% for category in categories %} {% if forloop.counter <= 4 %}
+            <div class="col-lg-6">
+              <div class="right-first-image">
+                <div class="thumb">
+                  <div class="inner-content">
+                    <h4>{{ category.name }}</h4>
+                    <span>{{ category.description }}</span>
+                  </div>
+                  <div class="hover-content">
+                    <div class="inner">
+                      <h4>{{ category.name }}</h4>
+                      <p>{{ category.description }}</p>
+                      <div class="main-border-button">
+                        <a href="{% url 'category' category.id %}">Discover More</a>
+                      </div>
+                    </div>
+                  </div>
+                  <img src="{{ category.image.url }}" />
+                </div>
+              </div>
+            </div>
+            {% endif %} {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ***** Main Banner Area End ***** -->
+
+{% include 'explore-products.html' %}
+
+<!-- ***** Explore Area Starts ***** -->
+<section class="section" id="explore">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="left-content">
+          <h2>Explore Our Products</h2>
+          <span
+            >Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora provident, eos repudiandae nostrum officia animi, non beatae obcaecati, reiciendis asperiores necessitatibus libero cupiditate! Deserunt excepturi ullam eos assumenda sint quam.</span
+          >
+          <div class="quote">
+            <i class="fa fa-quote-left"></i>
+            <p>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Magnam molestias velit amet in explicabo, eum numquam quo recusandae hic exercitationem. Et sunt maiores aut eaque commodi similique doloribus, aliquam totam!
+            </p>
+          </div>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi eum quibusdam obcaecati sit atque? Repudiandae officia maiores eveniet dicta omnis corrupti quam odit ea similique dolores. Beatae, doloribus ipsum. Iste?
+          </p>
+          <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Non consectetur dolores, alias facilis excepturi quibusdam laboriosam ut officiis aspernatur nihil aut vel, deserunt inventore autem doloribus fugiat modi. Deleniti, minus?
+            
+          </p>
+          <div class="main-border-button">
+            <a href="{% url 'dashboard' %}">Discover More</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="right-content">
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="leather">
+                <h4>Leather Bags</h4>
+                <span>Latest Collection</span>
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="first-image">
+                <img src="{% static 'images/explore-image-01.jpg' %}" alt="" />
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="second-image">
+                <img src="{% static 'images/explore-image-02.jpg' %}" alt="" />
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <div class="types">
+                <h4>Different Types</h4>
+                <span>Over 304 Products</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ***** Explore Area Ends ***** -->
+{% endblock content %}
